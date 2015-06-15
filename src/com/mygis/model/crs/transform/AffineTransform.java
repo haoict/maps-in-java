@@ -4,7 +4,7 @@ import com.mygis.math.Matrix;
 import com.mygis.model.geom.Point;
 
 public class AffineTransform implements GeometryTransform {
-
+    
     private Matrix matrix;
 
     public AffineTransform() {
@@ -17,6 +17,9 @@ public class AffineTransform implements GeometryTransform {
 
     @Override
     public Point convert(Point point) {
+        double epsilon = 0.000001;
+//        long x = (long) ((point.getX() - 139) * 80000 + epsilon);
+//        long y = (long) ((-point.getY() - 35.3333333330) * 80000 * 1.5 + epsilon);
         Matrix sourceMatrix = new Matrix(3, 3);
 
         sourceMatrix.setValue(0, 0, point.getX());
@@ -24,7 +27,8 @@ public class AffineTransform implements GeometryTransform {
         sourceMatrix.setValue(0, 2, 1);
 
         Matrix result = sourceMatrix.multiply(matrix);
-
+        //System.out.println("("+x+","+y+")");
+        //return new Point(x,y);
         return new Point(result.getValue(0, 0), result.getValue(0, 1));
     }
 

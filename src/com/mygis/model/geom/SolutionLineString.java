@@ -7,12 +7,12 @@ import com.mygis.model.common.Envelop;
 import com.mygis.model.common.GeometryType;
 import com.mygis.model.crs.transform.GeometryTransform;
 
-public class LineString extends AbstractGeometry {
+public class SolutionLineString extends AbstractGeometry {
 
     protected List<Point> pointList;
 
-    public LineString(List<Point> pointList) {
-        super(GeometryType.LineString);
+    public SolutionLineString(List<Point> pointList) {
+        super(GeometryType.SolutionLineString);
         if (pointList == null || pointList.size() < 2) {
             throw new IllegalArgumentException("LineString must contains more than one point");
         }
@@ -34,7 +34,7 @@ public class LineString extends AbstractGeometry {
         for (Point p : pointList) {
             newList.add(geometryTransform.convert(p));
         }
-        return new LineString(newList);
+        return new SolutionLineString(newList);
     }
 
     public int[] getX() {

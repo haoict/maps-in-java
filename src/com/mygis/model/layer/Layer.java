@@ -13,6 +13,7 @@ public class Layer {
 
     public Layer() {
     }
+   
 
     public void addGeometry(Geometry geo) {
         geometryList.add(geo);
@@ -37,6 +38,7 @@ public class Layer {
         }
         return envelop;
     }
+    
 
     public Layer transform(GeometryTransform trans) {
         Layer newLayer = new Layer();

@@ -3,30 +3,25 @@ package com.mygis.model.geom;
 import com.mygis.model.common.Envelop;
 import com.mygis.model.common.GeometryType;
 import com.mygis.model.crs.transform.GeometryTransform;
-import java.util.Comparator;
 
-public class Point extends AbstractGeometry {
+
+//Tien
+public class RequestPoint extends Point {
 
     private int id;
     private double x;
     private double y;
 
-    public Point(int id) {
-        super(GeometryType.Point);
-        this.id = id;
+    public RequestPoint(int id) {
+        super(id);
     }
 
-    public Point(double x, double y) {
-        super(GeometryType.Point);
-        this.x = x;
-        this.y = y;
+    public RequestPoint(double x, double y) {
+        super(x,y);
     }
 
-    public Point(int id, double x, double y) {
-        super(GeometryType.Point);
-        this.id = id;
-        this.x = x;
-        this.y = y;
+    public RequestPoint(int id, double x, double y) {
+        super(id,x,y);
     }
 
     public int getId() {
@@ -72,11 +67,11 @@ public class Point extends AbstractGeometry {
 
         Point p = (Point) obj;
 
-        if (Double.doubleToLongBits(x) != Double.doubleToLongBits(p.x)) {
+        if (Double.doubleToLongBits(x) != Double.doubleToLongBits(p.getX())) {
             return false;
         }
 
-        if (Double.doubleToLongBits(y) != Double.doubleToLongBits(p.y)) {
+        if (Double.doubleToLongBits(y) != Double.doubleToLongBits(p.getY())) {
             return false;
         }
 
@@ -85,14 +80,5 @@ public class Point extends AbstractGeometry {
 
     public String toDataString() {
         return "(" + x + " " + y + ")";
-    }
-    
-    public static Comparator<Point> getComparator() {
-        Comparator<Point> c = new Comparator<Point>() {
-            public int compare(Point u1, Point u2) {
-                return u1.getID().compareTo(u2.getID());
-            }
-        };
-        return c;
     }
 }

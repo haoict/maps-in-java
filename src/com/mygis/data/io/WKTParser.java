@@ -11,6 +11,7 @@ import com.mygis.model.geom.MultiPoint;
 import com.mygis.model.geom.MultiPolygon;
 import com.mygis.model.geom.Point;
 import com.mygis.model.geom.Polygon;
+import com.mygis.model.geom.SolutionLineString;
 
 public class WKTParser {
 
@@ -24,6 +25,8 @@ public class WKTParser {
             return getPoint(text);
         } else if (type.equalsIgnoreCase("LineString")) {
             return getLineString(text);
+        } else if (type.equalsIgnoreCase("SolutionLineString")) {
+            return getSolutionLineString(text);
         } else if (type.equalsIgnoreCase("Polygon")) {
             return getPolygon(text);
         }
@@ -63,6 +66,13 @@ public class WKTParser {
         List<Point> points = readPointList(text);
         return new LineString(points);
     }
+    
+    private SolutionLineString getSolutionLineString(String text) {
+        text = text.trim();
+        List<Point> points = readPointList(text);
+        return new SolutionLineString(points);
+    }
+    
 
     private List<Point> readPointList(String text) {
         text = text.trim();

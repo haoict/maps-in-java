@@ -14,7 +14,6 @@ import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -48,7 +47,8 @@ public class MyFrame extends JFrame {
 
     private MyPanel myPanel;
     private Layer layer;
-
+    private List<Point> listP;
+    
     private int width;
     private int height;
 
@@ -92,12 +92,13 @@ public class MyFrame extends JFrame {
             public void actionPerformed(ActionEvent event) {
                 statusLabel.setText("Loading map");
                 final JFileChooser fc = new JFileChooser();
-                int returnVal = fc.showSaveDialog(null);
+                int returnVal = fc.showOpenDialog(null);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     File file = fc.getSelectedFile();
                     try {
                         layer = getGraph(file.getPath());
                         myPanel.setLayer(layer);
+                        myPanel.getMap().setListP(listP);
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(null, ex.getMessage());
                     }
@@ -107,6 +108,52 @@ public class MyFrame extends JFrame {
                 }
             }
         });
+        
+        //Tien
+        JMenuItem eMenuItem2 = new JMenuItem("Read Request");
+        eMenuItem2.setMnemonic(KeyEvent.VK_E);
+        eMenuItem2.setToolTipText("Open request file");
+        eMenuItem2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                statusLabel.setText("Loading request");
+                final JFileChooser fc = new JFileChooser();
+                int returnVal = fc.showOpenDialog(null);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
+                    try {
+                        myPanel.readRequest(file);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                    }
+                    statusLabel.setText("Done.");
+                } else {
+                    statusLabel.setText("Click File -> Open to open a map ");
+                }
+            }
+        });
+        
+        JMenuItem eMenuItem3 = new JMenuItem("Import solution path");
+        eMenuItem3.setMnemonic(KeyEvent.VK_E);
+        eMenuItem3.setToolTipText("Import solution path");
+        eMenuItem3.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                statusLabel.setText("Loading solution file");
+                final JFileChooser fc = new JFileChooser();
+                int returnVal = fc.showOpenDialog(null);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
+                    try {
+                        myPanel.readSolution(file);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                    }
+                    statusLabel.setText("Done.");
+                } else {
+                    statusLabel.setText("Click File -> Open to open a map ");
+                }
+            }
+        });
+
 
         JMenuItem eMenuItem = new JMenuItem("Exit");
         eMenuItem.setMnemonic(KeyEvent.VK_E);
@@ -118,6 +165,8 @@ public class MyFrame extends JFrame {
         });
 
         file.add(eMenuItem1);
+        file.add(eMenuItem2);
+        file.add(eMenuItem3);
         file.add(eMenuItem);
         menubar.add(file);
 
@@ -176,12 +225,8 @@ public class MyFrame extends JFrame {
     public Layer getGraph(String namedata) throws Exception {
         Layer layer = new Layer();
         WKTParser wkt = new WKTParser();
-        List<Point> listP = new ArrayList<Point>();
-        Comparator<Point> c = new Comparator<Point>() {
-            public int compare(Point u1, Point u2) {
-                return u1.getID().compareTo(u2.getID());
-            }
-        };
+        listP = new ArrayList<Point>();
+        
         Scanner sc = new Scanner(new File(namedata));
         String s;
         String step = "get point";
@@ -216,13 +261,13 @@ public class MyFrame extends JFrame {
                     int id1 = Integer.parseInt(ss[0]);
                     int id2 = Integer.parseInt(ss[1]);
                     Geometry geoEdge = wkt.read("LineString("
-                            + listP.get(Collections.binarySearch(listP, new Point(id1), c)).getX()
+                            + listP.get(Collections.binarySearch(listP, new Point(id1), Point.getComparator())).getX()
                             + " "
-                            + listP.get(Collections.binarySearch(listP, new Point(id1), c)).getY()
+                            + listP.get(Collections.binarySearch(listP, new Point(id1), Point.getComparator())).getY()
                             + ","
-                            + listP.get(Collections.binarySearch(listP, new Point(id2), c)).getX()
+                            + listP.get(Collections.binarySearch(listP, new Point(id2), Point.getComparator())).getX()
                             + " "
-                            + listP.get(Collections.binarySearch(listP, new Point(id2), c)).getY()
+                            + listP.get(Collections.binarySearch(listP, new Point(id2), Point.getComparator())).getY()
                             + ")");
 
                     layer.addGeometry(geoEdge);
@@ -298,33 +343,55 @@ public class MyFrame extends JFrame {
         });
 
         JButton button1 = new JButton();
-        button1.setText("Pan left");
+        button1.setText("Left");
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                map.transform(AffineTransform.pan(-10, -10));
+                map.transform(AffineTransform.pan(-50, 0));
                 map.refreshMap();
             }
         });
         this.add(button1);
 
         JButton button2 = new JButton();
-        button2.setText("Pan right");
+        button2.setText("Right");
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                map.transform(AffineTransform.pan(10, 10));
+                map.transform(AffineTransform.pan(50, 0));
                 map.refreshMap();
             }
         });
         this.add(button2);
+        
+        JButton button6 = new JButton();
+        button6.setText("Up");
+        button6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                map.transform(AffineTransform.pan(0, -50));
+                map.refreshMap();
+            }
+        });
+        this.add(button6);
+        
+        JButton button7 = new JButton();
+        button7.setText("Down");
+        button7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                map.transform(AffineTransform.pan(0, 50));
+                map.refreshMap();
+            }
+        });
+        this.add(button7);
 
         JButton button3 = new JButton();
         button3.setText("Zoom int");
         button3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                double scale = 1.01;
+                double scale = 1.5;
                 map.transform(AffineTransform.scale(width / 2, height / 2, scale, scale));
                 map.refreshMap();
             }
@@ -336,7 +403,7 @@ public class MyFrame extends JFrame {
         button4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                double scale = 0.99;
+                double scale = 0.5;
                 map.transform(AffineTransform.scale(width / 2, height / 2, scale, scale));
                 map.refreshMap();
             }

@@ -1,5 +1,6 @@
 package com.mygis.view.util;
 
+import com.mygis.model.common.GeometryType;
 import java.awt.Graphics2D;
 import java.awt.geom.Area;
 
@@ -11,19 +12,31 @@ import com.mygis.model.geom.MultiPoint;
 import com.mygis.model.geom.MultiPolygon;
 import com.mygis.model.geom.Point;
 import com.mygis.model.geom.Polygon;
+import com.mygis.model.geom.SolutionLineString;
 import com.mygis.view.style.Style;
 
 public class DrawHelper {
 
     public static void drawGeometry(Graphics2D g, Style style, Geometry geometry) {
         switch (geometry.getGeometryType()) {
+                        
             case Point: {
                 drawPoint(g, style, (Point) geometry);
                 break;
             }
-
+            
+            case SolutionPoint: {
+                drawSolutionPoint(g, style, (Point) geometry);
+                break;
+            }
+            
             case LineString: {
                 drawLineString(g, style, (LineString) geometry);
+                break;
+            }
+            
+            case SolutionLineString: {
+                drawSolutionLineString(g, style, (SolutionLineString) geometry);
                 break;
             }
 
@@ -52,14 +65,41 @@ public class DrawHelper {
             }
         }
     }
+   
 
     private static void drawPoint(Graphics2D g, Style style, Point p) {
         double width = style.pointWidth / 2d;
-
+        //System.out.println("("+p.getX()+","+p.getY()+")");
         g.setColor(style.pointColor);
         g.setStroke(style.stroke);
 
         g.fillOval((int) (p.getX() - width), (int) (p.getY() - width), style.pointWidth, style.pointWidth);
+    }
+    
+    //Tien
+    public static void drawRequestPoint(Graphics2D g, Style style, Point p) {
+        double width = style.pointWidth / 2d;
+        //System.out.println("("+p.getX()+","+(p.getY())+")");
+        g.setColor(style.requestColor);
+        g.setStroke(style.stroke);
+
+        g.fillOval((int) (p.getX() - width), (int) (p.getY() - width), 5, 5);
+    }
+    
+    public static void drawSolutionPoint(Graphics2D g, Style style, Point p) {
+        double width = style.pointWidth / 2d;
+        //System.out.println("("+p.getX()+","+(p.getY())+")");
+        g.setColor(style.solutionPointColor);
+        g.setStroke(style.stroke);
+
+        g.fillOval((int) (p.getX() - width), (int) (p.getY() - width), style.solutionPointWidth, style.solutionPointWidth);
+    }
+    
+    private static void drawSolutionLineString(Graphics2D g, Style style, SolutionLineString ls) {
+        g.setPaint(style.solutionLineColor);
+        g.setStroke(style.stroke);
+
+        g.drawPolyline(ls.getX(), ls.getY(), ls.size());
     }
 
     private static void drawLineString(Graphics2D g, Style style, LineString ls) {

@@ -6,6 +6,9 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 import com.mygis.model.layer.Layer;
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MyPanel extends JPanel {
 
@@ -45,4 +48,18 @@ public class MyPanel extends JPanel {
         return map;
     }
 
+    //Tien
+    public void readRequest(File file) {
+        map.setRequestReader(file);
+        map.drawRequest();
+    }
+    
+    public void readSolution(File file) {
+        try {
+            map.setSolutionReader(file);
+            map.drawSolution();
+        } catch (Exception ex) {
+            Logger.getLogger(MyPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

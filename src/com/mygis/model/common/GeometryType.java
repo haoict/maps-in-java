@@ -11,6 +11,15 @@ public enum GeometryType {
                     return "Point";
                 }
             },
+    SolutionPoint {
+                public int getDimension() {
+                    return 2;
+                }
+
+                public String toString() {
+                    return "SolutionPoint";
+                }
+            },    
     LineString {
                 public int getDimension() {
                     return 2;
@@ -18,6 +27,15 @@ public enum GeometryType {
 
                 public String toString() {
                     return "LineString";
+                }
+            },
+    SolutionLineString {
+                public int getDimension() {
+                    return 2;
+                }
+
+                public String toString() {
+                    return "SolutionLineString";
                 }
             },
     Polygon {
@@ -54,6 +72,15 @@ public enum GeometryType {
 
                 public String toString() {
                     return "MultiPolygon";
+                }
+            },
+    RequestPoint {
+                public int getDimension() {
+                    return 2;
+                }
+
+                public String toString() {
+                    return "Point";
                 }
             };
 
